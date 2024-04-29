@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 import numpy as np
 import math
 import random
@@ -97,6 +98,22 @@ def hasse_bound(q):
     hasse_upper = 2*math.sqrt(q)+q+1
     print(f"Hasse bound for {q} is {hasse_lower} <= #E <= {hasse_upper}")
 
+def graph(ec,q,P):
+    n=order(ec,q,P)
+    R = O
+    x_points = []
+    y_points = []
+    for _ in range(1,n):
+        R = addition(ec, q, P, R)
+        x,y = R
+        x_points.append(x)
+        y_points.append(y)
+        if R == O:
+            break
+    return x_points,y_points
+
+
+
 
 
 def main():
@@ -115,6 +132,19 @@ def main():
     print()
 
     print(order(ec,q,P))
+
+    print()
+
+ 
+    
+
+    x,y = graph(ec,q,P) 
+    xpoints = np.array(x)
+    ypoints = np.array(y)
+
+    plt.plot(xpoints, ypoints, 'o')
+    plt.show()
+
 
     
 if __name__ == "__main__":
