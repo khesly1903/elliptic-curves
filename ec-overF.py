@@ -1,6 +1,6 @@
 import numpy as np
 import math
-
+import random
 O = (np.inf,np.inf)
 
 def ec_dis(a,b):
@@ -12,6 +12,18 @@ def ec_dis(a,b):
 def ec_point():
     pass
 
+def inv(a,q):
+    if a == q:
+        raise ValueError("not invertible")
+    elif a > q:
+        a %= q
+        return pow(a,-1,q)
+    elif a < q:
+        return pow(a,-1,q)
+    else:
+        raise ValueError("??nasi")
+    
+
 def is_on_curve(ec,q,P):
     a,b = ec
     x,y = P
@@ -20,14 +32,25 @@ def is_on_curve(ec,q,P):
     else:
         raise ValueError
 
-def ec_addition(ec,q,P,Q):
+def negative(P):
+    x_1,x_2 = P
+    return x_1,-x_2
+
+def addition(ec,q,P,Q):
+
     x_1,y_1 = P
     x_2,y_2 = Q
 
     a,b = ec
     
-    if x_1 != x_2 and y_1 != y_2: #point addition
-        drv = ((y_2 - y_1) * pow(x_2 - x_1,-1,q)) %q
+    if x_1 == np.inf and y_1 == np.inf: # O + P = P
+        x_3,y_3 = x_2,y_2 
+
+    elif x_2 == np.inf and y_2 == np.inf: # P + O = P
+        x_3,y_3 = x_1,y_1
+    
+    elif (x_1 != x_2 and y_1 != y_2) or (x_1 != x_2 and y_1 == y_2): #point addition
+        drv = ((y_2 - y_1) * inv(x_2-x_1,q)) %q
         x_3 = (pow(drv,2) - x_1 - x_2) %q
         y_3 = (drv * (x_1 - x_3) - y_1) %q
 
@@ -40,15 +63,33 @@ def ec_addition(ec,q,P,Q):
         x_3,y_3 = O
 
     
+
+    
     R = x_3,y_3
+
     return R
 
 
-def scalar_mult(a, b, k, P):
+def s_mult(ec,q, k, P):
+    print(f"SCALAR MULTIPLICATION {k}{P}:")
     R = P
+    print(f"{1} x {P} = {R}") 
     for i in range(1, k):
-        R = ec_addition(a, b, P, R)
+        R = addition(ec, q, P, R)
+        print(f"{i+1} x {P} = {R}")   
+        
     return R
+
+def order(ec,q,P):
+    print(f"ORDER OF {P}")
+    R = P
+    order_of_point = 1
+    while True:
+        R = addition(ec, q, P, R)
+        order_of_point += 1
+        if R == O:
+            break
+    return order_of_point
 
 
 def hasse_bound(q):
@@ -57,14 +98,25 @@ def hasse_bound(q):
     print(f"Hasse bound for {q} is {hasse_lower} <= #E <= {hasse_upper}")
 
 
+
 def main():
     ec = -7,10
+    q=13
+    P=11,4
+    Q=3,4
+    W=11,4 #order18
 
-    print(ec_addition(ec,13,(5,3),(5,3)))
-    print(scalar_mult(ec,13,3,(5,3)))
+    print()
+    print(f"ADDITION OF {P} AND {Q}:")
+    print(f"{P} + {Q} = {addition(ec,q,P,Q)}")
+    print()
 
+    s_mult(ec,q,19,P)
+    print()
 
+    print(order(ec,q,P))
 
+    
 if __name__ == "__main__":
     main()
     
