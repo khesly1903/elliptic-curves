@@ -4,12 +4,22 @@ import math
 import random
 O = (np.inf,np.inf)
 
-def ec_dis(a,b):
+def ec_dis(ec):
+    a,b = ec
     discriminant = pow(4*a,3) + 27 * pow(b,2)
     if discriminant == 0:
         raise ValueError("Discriminant is 0")
      
 
+def is_prime(p):
+    if p > 1:
+        for i in range(2, (p//2)+1):    
+            if (p % i) == 0:
+                raise ValueError(f"{p} is not a prime number")
+        else:
+            True
+    else:
+        raise ValueError(f"{p} must be positive integer")
 
 
 def inv(a,q):
@@ -110,6 +120,51 @@ def sub_gend(ec, q, P):
     
     return sub_gend_points  
 
+def binary(k):
+    binary = bin(k).replace("0b","") 
+    binary_arr = []
+    for bit in binary:
+        bit = int(bit) #conver to int cz in str form
+        binary_arr.append(bit)
+
+    return binary_arr
+        
+
+def double(ec,q,P):
+    return addition(ec,q,P,P)
+
+def double_and_add(ec,q,k,P):
+    n = 1
+    R = P
+
+    
+    binary_k = binary(k)[1:] #no operation for first bit
+    
+    print(f"-----First bit is {binary(k)[0]}, we do nothing")
+    print(f"1 x {P} = {P}")
+
+    for bit in binary_k:
+        if bit == 0:
+            n *= 2
+            print("--")
+            print(f"----bit is 0, n= {n}, double")
+            print("--")
+            print(f"{n} x {P} = {R}")
+            R = double(ec,q,R)
+            
+        elif bit == 1:
+            n = n*2 
+            R = double(ec,q,R) #double
+            R = addition(ec,q,P,R) #add
+            n += 1
+            print("--")
+            print(f"----bit is 1, n= {n}, double and add")
+            print("--")
+            print(f"{n} x {P} + {P}= {R}")
+        else:
+            raise(ValueError)
+
+    return R
 
 def hasse_bound(q):
     hasse_lower = (-2)*math.sqrt(q)+q+1
@@ -132,7 +187,8 @@ def graph(ec,q,P):
 
 
 
-def squareRoot(n, q): #stolen from geeksforgeeks (modified version)
+
+def squareRoot(n, q): 
     n = n % q
     if n == 0: #to catch when y=0, bcs otw return none
         return n
@@ -179,6 +235,11 @@ def main():
     b = int(input("b: "))
     ec = (a,b)
     q = int(input("q: "))
+    is_prime(q)
+
+    ec_dis(ec)
+
+
 
     print("---------------------------------------")
     x_points, y_points = ec_points(ec,q)
@@ -213,16 +274,31 @@ def main():
     P = x_0 , y_0
     Q = x_1 , y_1
 
-    addition(ec,q,P,Q)
+    print(addition(ec,q,P,Q))
 
     print("---------------------------------------")
-    print("For scalar multiplication, write scalar and point ")
-    k = int(input("n: "))
+    print("For scalar multiplication, write a scalar and a point ")
+    k = int(input("k: "))
     x_2 , y_2 = input("P: ").split()
     x_2 = int(x_2)
     y_2 = int(y_2)
     R = x_2 , y_2
     print(f"{k}{P} = {s_mult(ec,q,k,R)}")
+
+    
+    print(f"Binary form of {k} is {binary(k)}")
+
+    
+    R = double_and_add(ec,q,k,P)
+
+    print("--------")
+    print(f"Final result: {k} x {P} = {R}")
+
+    print("--------")
+    print(f"Normal scalar multiplication takes {k} steps but double and add algorithm takes {len(binary(k-1))} steps")
+
+
+    
 
     print("---------------------------------------")
     print("for finding the order of an element, write a point")
