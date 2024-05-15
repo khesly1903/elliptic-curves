@@ -167,8 +167,8 @@ def double_and_add(ec,q,k,P):
     return R
 
 def hasse_bound(q):
-    hasse_lower = (-2)*math.sqrt(q)+q+1
-    hasse_upper = 2*math.sqrt(q)+q+1
+    hasse_lower = math.floor((-2)*math.sqrt(q)+q+1)
+    hasse_upper = math.floor(2*math.sqrt(q)+q+1)
     print(f"Hasse bound for {q} is {hasse_lower} <= #E <= {hasse_upper}")
 
 def graph(ec,q,P):
@@ -251,6 +251,8 @@ def main():
         print(point)
         order_ec += 1
     print(f"Order of EC is {order_ec + 1} (including the point at inf)")
+
+    hasse_bound(q)
     
 
 
