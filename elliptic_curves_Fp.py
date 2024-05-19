@@ -247,18 +247,18 @@ def main():
                     y^2 = x^3 + ax + b, 
         along with the prime number p.""")
     
-    # a = int(input("a: "))
-    # b = int(input("b: "))
-    # ec = (a,b)
-    # q = int(input("q: "))
-
-    # is_prime(q)
-    # ec_dis(ec)
-
-    a = 12
-    b = 45
+    a = int(input("a: "))
+    b = int(input("b: "))
     ec = (a,b)
-    q = 983
+    q = int(input("q: "))
+
+    is_prime(q)
+    ec_dis(ec)
+
+    #a = 12
+    #b = 45
+    #ec = (a,b)
+    #q = 983
 
 
 
