@@ -5,6 +5,7 @@ import math
 O = (np.inf,np.inf)
 
 
+
 def ec_dis(ec):
     a,b = ec
     discriminant = pow(4*a,3) + 27 * pow(b,2)
@@ -27,6 +28,7 @@ def inv(a,q):
     if a == q:
         raise ValueError("not invertible")
     elif a > q:
+
         a %= q
         return pow(a,-1,q)
     elif a < q:
@@ -38,7 +40,7 @@ def inv(a,q):
 def is_on_curve(ec,q,P):
     a,b = ec
     x,y = P
-    if pow(y,2,q) == pow(x,3,q) + a*x + b:
+    if pow(y,2,q) == (pow(x,3,q) + a*x + b)%q:
         pass
     else:
         raise ValueError
@@ -233,7 +235,12 @@ def ec_points(ec,q):
 
     return x_points,y_points
 
-
+def center_text(message, width=80):
+    lines = message.strip().split('\n')
+    centered_lines = [line.center(width) for line in lines]    
+    centered_message = '\n'.join(centered_lines)
+    
+    return centered_message
 
 def default_case():
     print("No valid input provided, restarting...")
@@ -241,24 +248,29 @@ def default_case():
 def main():
 
     
-    print("""
-        To construct an elliptic curve over a finite field, 
-        please provide the parameters a and b for the equation 
-                    y^2 = x^3 + ax + b, 
-        along with the prime number p.""")
+    print(center_text(("""
+To construct an elliptic curve over a finite field, 
+please provide the parameters a and b for the equation 
+  y^2 = x^3 + ax + b 
+along with the prime number p.
+               """)))
     
     a = int(input("a: "))
     b = int(input("b: "))
     ec = (a,b)
     q = int(input("q: "))
 
+
+
     is_prime(q)
     ec_dis(ec)
 
-    #a = 12
-    #b = 45
-    #ec = (a,b)
-    #q = 983
+    # a = 12
+    # b = 45
+    # ec = (a,b)
+    # q = 983
+    
+    
 
 
 
@@ -299,6 +311,7 @@ def main():
                 ypoints = np.array(y_points)
 
                 plt.plot(xpoints, ypoints, 'o')
+                plt.title(f"Elliptic Curve: $y^2 = x^3 + {a}x + {b}$ over F_{q}")
                 plt.show()
 
 
