@@ -1,1 +1,7 @@
-![Screenshot_2024-04-24_14-25-44](https://github.com/khesly1903/elliptic-curves/assets/98612716/899675dc-9556-4330-b88a-c981422126da)
+-ec_overR.py: Deals with operations on elliptic curves over the field of real numbers (unfinished).
+-ec_overF.py: Deals with operations on elliptic curves over finite fields. However, it only handles finite fields of the form F_p, meaning it does not work with extension fields of the form F_p^n. The available operations are:
+  1: Elliptic Curve points and graphs
+  2: Addition
+  3: Scalar multiplication
+  4: Scalar multiplication using the double-and-add algorithm
+  5: Order of an element and its graph
